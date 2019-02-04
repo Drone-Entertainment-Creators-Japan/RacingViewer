@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PreferenceView</class>
+ <widget class="QWidget" name="PreferenceView">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>534</width>
+    <height>481</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QGroupBox" name="p_group_directory">
+     <property name="title">
+      <string>Directory</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <widget class="QLabel" name="p_label_pilotdir">
+        <property name="text">
+         <string>Pilots path</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="p_pilotdir"/>
+      </item>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="p_open_piltdir_dialog">
+        <property name="minimumSize">
+         <size>
+          <width>30</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="p_label_eventdir">
+        <property name="text">
+         <string>Event path</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="p_eventdir"/>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="p_open_eventdir_dialog">
+        <property name="minimumSize">
+         <size>
+          <width>30</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="p_label_layoutdir">
+        <property name="text">
+         <string>Layouts path</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="p_layoutdir"/>
+      </item>
+      <item row="2" column="2">
+       <widget class="QPushButton" name="p_open_layoutdir_dialog">
+        <property name="minimumSize">
+         <size>
+          <width>30</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="p_group_pilot_list">
+     <property name="title">
+      <string>Pilot list</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="p_pilot_list_auto_refresh">
+        <property name="text">
+         <string>Auto refresh</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="p_group_screen">
+     <property name="title">
+      <string>Screen</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="p_auto_create_unknown_pilot">
+        <property name="text">
+         <string>Auto create new pilot</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QLabel" name="p_label_viewer_fps">
+          <property name="text">
+           <string>Viewer frame rate[fps]</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="p_viewer_fps">
+          <property name="minimumSize">
+           <size>
+            <width>70</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="currentText">
+           <string>15</string>
+          </property>
+          <item>
+           <property name="text">
+            <string>15</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>20</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>30</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>60</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="p_camera_find_and_activate">
+        <property name="text">
+         <string>Find and activate</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="p_group_ecognition">
+     <property name="title">
+      <string>Auto Lap </string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_4">
+      <item row="1" column="2">
+       <widget class="QComboBox" name="p_armarker_type">
+        <property name="minimumSize">
+         <size>
+          <width>150</width>
+          <height>0</height>
+         </size>
+        </property>
+        <item>
+         <property name="text">
+          <string>( 4 x 4)  50</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>( 4 x 4) 100</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>( 4 x 4) 250</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="p_label_armarker_type">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Marker type</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QPushButton" name="p_armarker_generate">
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Generate</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="p_speech_laptime">
+        <property name="text">
+         <string>Speech laptime</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>p_open_eventdir_dialog</sender>
+   <signal>clicked()</signal>
+   <receiver>PreferenceView</receiver>
+   <slot>openEventDir()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>514</x>
+     <y>87</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>p_open_layoutdir_dialog</sender>
+   <signal>clicked()</signal>
+   <receiver>PreferenceView</receiver>
+   <slot>openLayoutDir()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>514</x>
+     <y>122</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>p_open_piltdir_dialog</sender>
+   <signal>clicked()</signal>
+   <receiver>PreferenceView</receiver>
+   <slot>openPilotDir()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>514</x>
+     <y>52</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>p_eventdir</sender>
+   <signal>editingFinished()</signal>
+   <receiver>PreferenceView</receiver>
+   <slot>finishedEventDirEditing()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>285</x>
+     <y>70</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>266</x>
+     <y>240</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>p_layoutdir</sender>
+   <signal>editingFinished()</signal>
+   <receiver>PreferenceView</receiver>
+   <slot>finishedLayoutDirEditing()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>285</x>
+     <y>105</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>266</x>
+     <y>240</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>p_pilotdir</sender>
+   <signal>editingFinished()</signal>
+   <receiver>PreferenceView</receiver>
+   <slot>finishedPilotDirEditing()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>285</x>
+     <y>35</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>266</x>
+     <y>240</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>p_pilot_list_auto_refresh</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>PreferenceView</receiver>
+   <slot>stateChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>270</x>
+     <y>179</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>266</x>
+     <y>240</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>p_camera_find_and_activate</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>PreferenceView</receiver>
+   <slot>stateChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>270</x>
+     <y>241</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>266</x>
+     <y>240</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>p_auto_create_unknown_pilot</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>PreferenceView</receiver>
+   <slot>stateChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>270</x>
+     <y>262</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>266</x>
+     <y>240</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>p_viewer_fps</sender>
+   <signal>currentTextChanged(QString)</signal>
+   <receiver>PreferenceView</receiver>
+   <slot>comboBoxChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>461</x>
+     <y>250</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>266</x>
+     <y>240</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>p_armarker_type</sender>
+   <signal>currentTextChanged(QString)</signal>
+   <receiver>PreferenceView</receiver>
+   <slot>comboBoxChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>151</x>
+     <y>352</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>266</x>
+     <y>240</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>p_armarker_generate</sender>
+   <signal>clicked()</signal>
+   <receiver>PreferenceView</receiver>
+   <slot>generateARMarkers()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>463</x>
+     <y>353</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>266</x>
+     <y>240</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>p_speech_laptime</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>PreferenceView</receiver>
+   <slot>stateChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>84</x>
+     <y>345</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>266</x>
+     <y>240</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>openEventDir()</slot>
+  <slot>openLayoutDir()</slot>
+  <slot>openPilotDir()</slot>
+  <slot>finishedEventDirEditing()</slot>
+  <slot>finishedLayoutDirEditing()</slot>
+  <slot>finishedPilotDirEditing()</slot>
+  <slot>stateChanged(int)</slot>
+  <slot>comboBoxChanged(QString)</slot>
+  <slot>generateARMarkers()</slot>
+ </slots>
+</ui>

@@ -1,0 +1,40 @@
+
+先に下記をインストールしておく
+ - Qt
+ - cmake
+ - コンパイラ
+
+下記項目にチェックを入れる
+ - WITH_QT
+
+下記項目を編集後, configure ボタンを押す
+ OPENCV_EXTRA_MODULES_PATH=<opencv_contrib>/modules
+
+Configure ボタンを押す
+
+下記項目を設定する
+  QT_QMAKE_EXECUTABLE   /Users/[username]/Qt/5.12.0/clang_64/bin/qmake
+  Qt5Concurrent_DIR     /Users/[username]/Qt/5.12.0/clang_64/lib/cmake/Qt5Concurrent
+  Qt5Core_DIR           /Users/[username]/Qt/5.12.0/clang_64/lib/cmake/Qt5Core
+  Qt5Gui_DIR            /Users/[username]/Qt/5.12.0/clang_64/lib/cmake/Qt5Gui
+  Qt5Test_DIR           /Users/[username]/Qt/5.12.0/clang_64/lib/cmake/Qt5Test
+  Qt5Widgets_DIR        /Users/[username]/Qt/5.12.0/clang_64/lib/cmake/Qt5Widgets
+
+
+下記項目のチェックを外す
+ - BUILD_opencv_cvv
+ - WITH_MSMF
+ - WITH_VTK
+ 
+Configure ボタンを押す
+  Qt5OpenGL_DIR            /Users/[username]/Qt/5.12.0/clang_64/lib/cmake/Qt5OpenGL
+
+Configure ボタンを押す
+
+Generate ボタンを押す
+
+
+build フォルダに移動して
+mingw32-make install
+sudo make install
+
