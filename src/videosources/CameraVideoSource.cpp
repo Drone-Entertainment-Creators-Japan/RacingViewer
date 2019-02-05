@@ -39,9 +39,10 @@ CameraVideoSource::CameraVideoSource(const QString& device_id, PilotListModel* p
     mp_camera->setViewfinder(this);
 
     /* font */
-    int id = QFontDatabase::addApplicationFont(":/BLADRMF.ttf");
+    int id = QFontDatabase::addApplicationFont(":/V-GERB(bold).ttf");
     QString family = QFontDatabase::applicationFontFamilies(id).at(0);
     m_pilot_name_font = QFont(family);
+//    m_pilot_name_font.setItalic(true);
 
     id = QFontDatabase::addApplicationFont(":/NeograyRegular.otf");
     family = QFontDatabase::applicationFontFamilies(id).at(0);

@@ -2,10 +2,10 @@
     <qresource prefix="/">
         <file alias="PilotDisplay1_bg.png">images/PilotDisplay1_bg.png</file>
         <file alias="PilotDisplay1_line.png">images/PilotDisplay1_line.png</file>
-        <file alias="BLADRMF.ttf">fonts/bladerunner/BLADRMF_.TTF</file>
         <file alias="NeograyMedium.otf">fonts/neogrey/NeogreyMedium.otf</file>
         <file alias="NeograyRegular.otf">fonts/neogrey/NeogreyRegular.otf</file>
         <file alias="PilotDisplay1_mask.png">images/PilotDisplay1_mask.png</file>
         <file alias="beep.wav">sounds/beep.wav</file>
+        <file alias="V-GERB(bold).ttf">fonts/Voyager-Grotesque/V-GERB(bold).ttf</file>
     </qresource>
 </RCC>
