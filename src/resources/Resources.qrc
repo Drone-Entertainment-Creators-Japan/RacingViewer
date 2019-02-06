@@ -7,5 +7,6 @@
         <file alias="PilotDisplay1_mask.png">images/PilotDisplay1_mask.png</file>
         <file alias="beep.wav">sounds/beep.wav</file>
         <file alias="V-GERB(bold).ttf">fonts/Voyager-Grotesque/V-GERB(bold).ttf</file>
+        <file alias="BradeRunner.fft">fonts/Blade_Runner_Movie_Font/bladrmf.ttf</file>
     </qresource>
 </RCC>

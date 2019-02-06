@@ -15,7 +15,6 @@ LapTimeCollection::LapTimeCollection(CourseModel* p_course, QObject *parent) : Q
 , m_section_count( 0 )
 {
     m_tts.setLocale(QLocale(QLocale::English,  QLocale::UnitedStates));
-
     if( mp_course )
     {
         connect(mp_course, SIGNAL(sectionCountChanged(int )), this, SLOT(sectionCountChanged(int)));
@@ -202,5 +201,7 @@ void LapTimeCollection::sectionCountChanged(int section_count)
         if( ! m_list[i] ) { continue; }
         m_list[i]->setSectionCount(section_count);
     }
+    m_tts.say("Hello");
+
 }
 

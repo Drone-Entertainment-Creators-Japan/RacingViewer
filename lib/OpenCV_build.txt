@@ -13,12 +13,12 @@
 Configure ボタンを押す
 
 下記項目を設定する
-  QT_QMAKE_EXECUTABLE   /Users/[username]/Qt/5.12.0/clang_64/bin/qmake
-  Qt5Concurrent_DIR     /Users/[username]/Qt/5.12.0/clang_64/lib/cmake/Qt5Concurrent
-  Qt5Core_DIR           /Users/[username]/Qt/5.12.0/clang_64/lib/cmake/Qt5Core
-  Qt5Gui_DIR            /Users/[username]/Qt/5.12.0/clang_64/lib/cmake/Qt5Gui
-  Qt5Test_DIR           /Users/[username]/Qt/5.12.0/clang_64/lib/cmake/Qt5Test
-  Qt5Widgets_DIR        /Users/[username]/Qt/5.12.0/clang_64/lib/cmake/Qt5Widgets
+  QT_QMAKE_EXECUTABLE   [Qtインストールフォルダ]/5.12.0/clang_64/bin/qmake
+  Qt5Concurrent_DIR     [Qtインストールフォルダ]/5.12.0/clang_64/lib/cmake/Qt5Concurrent
+  Qt5Core_DIR           [Qtインストールフォルダ]/5.12.0/clang_64/lib/cmake/Qt5Core
+  Qt5Gui_DIR            [Qtインストールフォルダ]/5.12.0/clang_64/lib/cmake/Qt5Gui
+  Qt5Test_DIR           [Qtインストールフォルダ]/5.12.0/clang_64/lib/cmake/Qt5Test
+  Qt5Widgets_DIR        [Qtインストールフォルダ]/5.12.0/clang_64/lib/cmake/Qt5Widgets
 
 
 下記項目のチェックを外す
