@@ -251,6 +251,7 @@ void ViewWindow::paintEvent(QPaintEvent* p_event)
 
         p_render->paint(&painter, m_layouts[i]->geometry());
         if( p_render != m_selected ) { continue; }
+        painter.setPen(Qt::blue);
         painter.drawRect(m_layouts[i]->geometry());
     }
 

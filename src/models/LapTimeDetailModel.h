@@ -30,7 +30,7 @@ public:
     bool setItemList(const QList<Item>& items);
 
 public slots:
-    void lapTimeChanged(int lap_id, int section, const QTime& time);
+    void lapTimeChanged(int lap_id, int section, qint32 msec);
 
 private:
     QList<Item> m_items;

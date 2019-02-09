@@ -89,7 +89,7 @@ bool LapTimeDetailModel::setItemList(const QList<Item>& items)
     {
         LapTimeRecord* p_record = m_items[i].p_record;
         if( ! p_record ) { continue; }
-        disconnect(p_record, SIGNAL(lapTimeChanged(int, int, const QTime&)), this, SLOT(lapTimeChanged(int, int, const QTime&)));
+        disconnect(p_record, SIGNAL(lapTimeChanged(int, int, qint32)), this, SLOT(lapTimeChanged(int, int, qint32)));
     }
     m_items = items;
 
@@ -97,7 +97,7 @@ bool LapTimeDetailModel::setItemList(const QList<Item>& items)
     {
         LapTimeRecord* p_record = m_items[i].p_record;
         if( ! p_record ) { continue; }
-        disconnect(p_record, SIGNAL(lapTimeChanged(int, int, const QTime&)), this, SLOT(lapTimeChanged(int, int, const QTime&)));
+        disconnect(p_record, SIGNAL(lapTimeChanged(int, int, qint32)), this, SLOT(lapTimeChanged(int, int, qint32)));
     }
     endResetModel();
 
@@ -105,11 +105,11 @@ bool LapTimeDetailModel::setItemList(const QList<Item>& items)
 }
 
 /* ------------------------------------------------------------------------------------------------ */
-void LapTimeDetailModel::lapTimeChanged(int lap_id, int section, const QTime& time)
+void LapTimeDetailModel::lapTimeChanged(int lap_id, int section, qint32 msec)
 {
     for(int i=0; i<m_items.count(); ++i)
     {
-        LapTimeRecord* p_record   = m_items[i].p_record;
+        LapTimeRecord* p_record = m_items[i].p_record;
         if( static_cast<QObject*>( p_record ) != sender() ) { continue; }
         if( m_items[i].lap_id != lap_id ) { continue; }
 

@@ -78,6 +78,7 @@ LapView::~LapView()
 {
     delete mp_detail_model;
     delete mp_table_model;
+    delete mp_pilot_select;
 }
 
 /* ------------------------------------------------------------------------------------------------ */

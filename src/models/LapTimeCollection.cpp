@@ -187,7 +187,9 @@ void LapTimeCollection::passedThrough(const QString& pilot, int id, qint64 tick_
     m_sound.play();
 
     if( ! m_speech_enable ) { return; }
-    m_tts.say(pilot + ". " + QTime::fromMSecsSinceStartOfDay(time).toString("s.zzz"));
+    QTime  qtime = QTime::fromMSecsSinceStartOfDay(time);
+    if( time < 60000 ) { m_tts.say(pilot + ". " + qtime.toString("s.zzz")); }
+    else               { m_tts.say(pilot + ". " + QString().sprintf("%d ", time/60000) + tr("minutes ") + qtime.toString("s.zzz")); }
 }
 
 /* ------------------------------------------------------------------------------------------------ */
@@ -201,7 +203,5 @@ void LapTimeCollection::sectionCountChanged(int section_count)
         if( ! m_list[i] ) { continue; }
         m_list[i]->setSectionCount(section_count);
     }
-    m_tts.say("Hello");
-
 }
 

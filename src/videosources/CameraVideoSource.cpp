@@ -405,6 +405,7 @@ void CameraVideoSource::pilotDescChanged(QString pilot, int descriptor_idx, QVar
 /* ------------------------------------------------------------------------------------------------ */
 void CameraVideoSource::passedThrough(int id, qint64 tick_count, double tick_frequency)
 {
+    if( m_pilot_name.isEmpty() ) { return; }
     emit passedThrough(m_pilot_name, id, tick_count, tick_frequency);
 }
 
