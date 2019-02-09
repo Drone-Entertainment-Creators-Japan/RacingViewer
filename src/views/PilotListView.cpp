@@ -14,10 +14,10 @@
 #include <QDebug>
 
 /* ------------------------------------------------------------------------------------------------ */
-PilotListView::PilotListView(PilotListModel* p_model, QSettings* p_setting, QWidget *parent) : QWidget(parent)
+PilotListView::PilotListView(PilotListModel* p_model, QSettings* p_setting, QWidget* p_parent) : QWidget(p_parent)
 , mp_ui      ( new Ui::PilotListView )
-, mp_model   ( p_model   )
 , mp_settings( p_setting )
+, mp_model   ( p_model   )
 {
     const QMetaObject& defs = Definitions::staticMetaObject;
     m_options = defs.enumerator( defs.indexOfEnumerator("Options") );

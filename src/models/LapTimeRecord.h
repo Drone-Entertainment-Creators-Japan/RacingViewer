@@ -29,32 +29,32 @@ public:
     bool write(void);
     bool close(void);
 
-    QTime setSectionTime(int section, qint64 tick);
-    QTime time(int lap_id, int section=kSection_LapTime) const;
-    QTime getBestTime(int section=kSection_LapTime, int* p_lap_id=nullptr);
+    qint32 setSectionTime(int section, qint64 tick);
+    qint32 time(int lap_id, int section=kSection_LapTime) const;
+    qint32 getBestTime(int section=kSection_LapTime, int* p_lap_id=nullptr);
 
-    bool  startLap(qint64 tick, qint64 frequency);
-    QTime endLap(qint64 tick);
-    bool  cancelLap(void);
+    bool   startLap(qint64 tick, double frequency);
+    qint32 endLap(qint64 tick);
+    bool   cancelLap(void);
 
-    QTime current(qint64 tick) const;
+    qint32 current(qint64 tick) const;
     int  lapCount(void) const;
 
 signals:
-    void lapTimeChanged(int lap_id, int section, const QTime& time);
+    void lapTimeChanged(int lap_id, int section, qint32 msec);
 
 public slots:
 
 private:
     static const QString kFormat;
 
-    QFile                 m_file;
-    int                   m_current_lap;
-    int                   m_section_count;
-    qint64                m_start_tick;
-    qint64                m_last_tick;
-    qint64                m_frequency;
-    QList<QVector<QTime>> m_laps;
+    QFile                  m_file;
+    int                    m_current_lap;
+    int                    m_section_count;
+    qint64                 m_start_tick;
+    qint64                 m_last_tick;
+    double                 m_frequency;
+    QList<QVector<qint32>> m_laps;
 };
 
 #endif /* LAPTIMERECORD_H */

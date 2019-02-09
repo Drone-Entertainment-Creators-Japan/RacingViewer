@@ -150,7 +150,7 @@ void MainWindow::timeout(void)
         new_sources.push_back(p_camera);
 
         if( ! mp_laps ) { continue; }
-        connect(p_camera, SIGNAL(passedThrough(const QString&, int, qint64, qint64)), mp_laps, SLOT(passedThrough(const QString&, int, qint64, qint64)));
+        connect(p_camera, SIGNAL(passedThrough(const QString&, int, qint64, double)), mp_laps, SLOT(passedThrough(const QString&, int, qint64, double)));
     }
     mp_video_sources->setVideoSources(new_sources);
 }

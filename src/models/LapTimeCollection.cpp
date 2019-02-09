@@ -146,7 +146,7 @@ void LapTimeCollection::pilotDescChanged(QString pilot, int descriptor_idx, QVar
 }
 
 /* ------------------------------------------------------------------------------------------------ */
-void LapTimeCollection::passedThrough(const QString& pilot, int id, qint64 tick_count, qint64 tick_frequency)
+void LapTimeCollection::passedThrough(const QString& pilot, int id, qint64 tick_count, double tick_frequency)
 {
     if( ! mp_course ) { return; }
     LapTimeRecord* p_record = nullptr;
@@ -169,7 +169,7 @@ void LapTimeCollection::passedThrough(const QString& pilot, int id, qint64 tick_
     int point_idx  = mp_course->pointIndex(id);
     int point_type = mp_course->pointType(point_idx);
     int section_id = mp_course->sectionID(point_idx);
-    QTime time;
+    qint32 time = 0;
     switch( point_type )
     {
         case Definitions::kPoint_StartAndGoal:
@@ -183,11 +183,11 @@ void LapTimeCollection::passedThrough(const QString& pilot, int id, qint64 tick_
         default: { /* nothing */ } break;
     }
 
-    if( time.isNull() ) { return; }
+    if( time <= 0 ) { return; }
     m_sound.play();
 
     if( ! m_speech_enable ) { return; }
-    m_tts.say(pilot + ". " + time.toString("s.zzz"));
+    m_tts.say(pilot + ". " + QTime::fromMSecsSinceStartOfDay(time).toString("s.zzz"));
 }
 
 /* ------------------------------------------------------------------------------------------------ */

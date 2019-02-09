@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = RacingViewer
 TEMPLATE = app
 
-TRANSLATIONS += translation_ja.ts
+#TRANSLATIONS += translation_ja.ts
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -99,14 +99,13 @@ INCLUDEPATH += \
 #    $$OPENCV/include
 
 LIBS += \
-    /usr/local/lib/libopencv_core.dylib \
-    /usr/local/lib/libopencv_imgcodecs.dylib \
-    /usr/local/lib/libopencv_aruco.dylib
+    /usr/local/lib/libopencv_world.dylib
 #    $$OPENCV/x64/mingw/lib/libopencv_world401.dll.a
 
 LD_LIBRARY_PATH += \
     $$OPENCV/x64/mingw/bin
 
+ICON = ./resources/icons/app.icns
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

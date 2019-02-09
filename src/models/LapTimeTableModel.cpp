@@ -61,11 +61,12 @@ QVariant LapTimeTableModel::data(const QModelIndex& index, int role) const
     if( lap_id <   0                               ) { return QVariant(); }
     if( lap_id >= (m_list[pilot_id]->lapCount()+1) ) { return QVariant(); }
 
-    QTime time;
+    qint32 time = 0;
     if( lap_id == kRow_BestLap ) { time = m_list[pilot_id]->getBestTime(); }
     else                         { time = m_list[pilot_id]->time(lap_id-kRowHeader); }
 
-    return time.toString(tr("mm:ss.zzz"));
+    if( time <= 0 ) { return QVariant(); }
+    return QTime::fromMSecsSinceStartOfDay(time).toString(tr("mm:ss.zzz"));
 }
 
 /* ------------------------------------------------------------------------------------------------ */
@@ -75,7 +76,7 @@ bool LapTimeTableModel::setLapTimeList(const QList<LapTimeRecord*>& laptime_list
     for(int i=0; i<m_list.count(); ++i)
     {
         if( ! m_list[i] ) { continue; }
-        disconnect(m_list[i], SIGNAL(lapTimeChanged(int, int, const QTime&)), this, SLOT(lapTimeChanged(int, int, const QTime&)));
+        disconnect(m_list[i], SIGNAL(lapTimeChanged(int, int, qint32)), this, SLOT(lapTimeChanged(int, int, qint32)));
     }
     m_max_lap_count = 0;
     m_list.clear();
@@ -88,7 +89,7 @@ bool LapTimeTableModel::setLapTimeList(const QList<LapTimeRecord*>& laptime_list
     for(int i=0; i<m_list.count(); ++i)
     {
         if( ! m_list[i] ) { continue; }
-        connect(m_list[i], SIGNAL(lapTimeChanged(int, int, const QTime&)), this, SLOT(lapTimeChanged(int, int, const QTime&)));
+        connect(m_list[i], SIGNAL(lapTimeChanged(int, int, qint32)), this, SLOT(lapTimeChanged(int, int, qint32)));
 
         if( m_list[i]->lapCount() > m_max_lap_count ) { m_max_lap_count = m_list[i]->lapCount(); }
     }
@@ -98,7 +99,7 @@ bool LapTimeTableModel::setLapTimeList(const QList<LapTimeRecord*>& laptime_list
 }
 
 /* ------------------------------------------------------------------------------------------------ */
-void LapTimeTableModel::lapTimeChanged(int lap_id, int point_id, const QTime& time)
+void LapTimeTableModel::lapTimeChanged(int lap_id, int point_id, qint32 msec)
 {
     int pilot_id = 0;
     for(; pilot_id<m_list.count(); ++pilot_id)

@@ -31,7 +31,7 @@ public:
     bool setLapTimeList(const QList<LapTimeRecord*>& laptime_list);
 
 public slots:
-    void lapTimeChanged(int lap_id, int point_id, const QTime& time);
+    void lapTimeChanged(int lap_id, int point_id, qint32 msec);
 
 private:
     QList<QPointer<LapTimeRecord>> m_list;

@@ -51,7 +51,7 @@ public:
 
 public slots:
     void pilotDescChanged(QString pilot, int descriptor_idx, QVariant value);
-    void passedThrough(int id, qint64 tick_count, qint64 tick_frequency);
+    void passedThrough(int id, qint64 tick_count, double tick_frequency);
 
 private:
     bool start(const QVideoSurfaceFormat& format) override;
@@ -63,7 +63,7 @@ private:
     int  cameraAspect(const QString& text) const;
 signals:
     void update(CameraVideoSource* p_render);
-    void passedThrough(const QString& pilot, int id, qint64 tick_count, qint64 tick_frequency);
+    void passedThrough(const QString& pilot, int id, qint64 tick_count, double tick_frequency);
 
 private:
     bool           m_active;

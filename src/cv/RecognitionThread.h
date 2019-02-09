@@ -32,7 +32,7 @@ public:
     void getDetectedParameters(QVector<int>* p_ids, QVector<QPoint>* p_corners);
 
 signals:
-    void passedThrough(int id, qint64 tick_count, qint64 tick_frequency);
+    void passedThrough(int id, qint64 tick_count, double tick_frequency);
 
 protected:
     void run(void) override;
@@ -47,6 +47,8 @@ private:
 
     cv::Ptr<cv::aruco::Dictionary>        m_dictionary;
     std::vector<int>                      m_detected_ids;
+    std::vector<int>                      m_detected_id_count;
+    size_t                                m_dominant_id;       /* 1 origin. 0 represents null */
     std::vector<std::vector<cv::Point2f>> m_detected_corners;
 
 };

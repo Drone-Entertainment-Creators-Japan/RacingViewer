@@ -155,7 +155,7 @@ bool CameraVideoSource::setRecognitionEnabled(bool enable)
             mp_thread = new RecognitionThread(this);
             mp_thread->setVideoSource(this);
             mp_thread->setDictonary( cv::aruco::getPredefinedDictionary(marker_type) );
-            connect(mp_thread, SIGNAL(passedThrough(int, qint64, qint64)), this, SLOT(passedThrough(int, qint64, qint64)), Qt::QueuedConnection);
+            connect(mp_thread, SIGNAL(passedThrough(int, qint64, double)), this, SLOT(passedThrough(int, qint64, double)), Qt::QueuedConnection);
         }
         mp_thread->start();
     } else
@@ -262,8 +262,17 @@ void CameraVideoSource::paint(QPainter* p_painter, const QRect& target_rect)
         p_painter->drawText(static_cast<int>(275*rate), static_cast<int>(59*rate), "best");
         if( mp_laptime )
         {
-            p_painter->drawText(static_cast<int>(170*rate), static_cast<int>(59*rate), mp_laptime->current(cv::getTickCount()).toString("mm : ss . zzz") );
-            p_painter->drawText(static_cast<int>(326*rate), static_cast<int>(59*rate), mp_laptime->getBestTime().toString("mm : ss . zzz"));
+            QString txt;
+
+            int current = mp_laptime->current(cv::getTickCount());
+            if( current <= 0 ) { txt = tr("---"); }
+            else               { txt = QTime::fromMSecsSinceStartOfDay(current).toString("mm : ss . zzz"); }
+            p_painter->drawText(static_cast<int>(170*rate), static_cast<int>(59*rate),  txt);
+
+            int best = mp_laptime->getBestTime();
+            if( best <= 0 ) { txt = tr("---"); }
+            else            { txt = QTime::fromMSecsSinceStartOfDay(best).toString("mm : ss . zzz"); }
+            p_painter->drawText(static_cast<int>(326*rate), static_cast<int>(59*rate), txt);
         }
     }
 
@@ -394,7 +403,7 @@ void CameraVideoSource::pilotDescChanged(QString pilot, int descriptor_idx, QVar
 }
 
 /* ------------------------------------------------------------------------------------------------ */
-void CameraVideoSource::passedThrough(int id, qint64 tick_count, qint64 tick_frequency)
+void CameraVideoSource::passedThrough(int id, qint64 tick_count, double tick_frequency)
 {
     emit passedThrough(m_pilot_name, id, tick_count, tick_frequency);
 }

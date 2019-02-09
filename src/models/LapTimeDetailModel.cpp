@@ -77,8 +77,8 @@ QVariant LapTimeDetailModel::data(const QModelIndex& index, int role) const
     if( section <   0                             ) { return QVariant(); }
     if( section >= p_record->sectionCount(lap_id) ) { return QVariant(); }
 
-    QTime time = p_record->time(lap_id, section);
-    return time.toString(tr("mm:ss.zzz"));
+    qint32 time = p_record->time(lap_id, section);
+    return QTime::fromMSecsSinceStartOfDay(time).toString(tr("mm:ss.zzz"));
 }
 
 /* ------------------------------------------------------------------------------------------------ */

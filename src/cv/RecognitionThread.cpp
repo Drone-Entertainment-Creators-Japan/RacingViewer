@@ -8,6 +8,7 @@
 RecognitionThread::RecognitionThread(QObject* p_parent) : QThread(p_parent)
 , mp_source( nullptr )
 , m_loop   ( true )
+, m_dominant_id( -1 )
 {
 
 }
@@ -22,6 +23,7 @@ RecognitionThread::~RecognitionThread(void)
 bool RecognitionThread::setDictonary(cv::Ptr<cv::aruco::Dictionary> dictionary)
 {
     QMutexLocker locker(&m_mutex);
+    if( dictionary->bytesList.rows < 0 ) { return false; }
     m_dictionary = dictionary;
 
     return true;
@@ -101,49 +103,80 @@ void RecognitionThread::run(void)
     parameters->minMarkerPerimeterRate = 0.1;
     parameters->maxMarkerPerimeterRate = 4.00;
 
-    int marker_id = -1;
+    size_t last_recognized_marker = 0;
     int anti_flicker_count = 0;
+    qint64 last_detected_timestamp = 0;
     while( m_loop )
     {
         m_sem.acquire();
 
         mp_source->getImage(image);
 
-        m_mutex.lock();
+        m_mutex.lock(); /* ----------------------- */
+        size_t total_id_count = static_cast<size_t>(m_dictionary->bytesList.rows);
         cv::aruco::detectMarkers(image, m_dictionary, m_detected_corners, m_detected_ids, parameters);
-        m_mutex.unlock();
+        if( m_detected_id_count.size() < (total_id_count+1) ) { m_detected_id_count.resize( total_id_count + 1 ); } /* first element is used to avoid buffer overrun */
 
-        if( m_detected_corners.empty() )
+        /* dominant id detection */
+        size_t current_dominant_id = 0;
+        int dominant_id_count = 0;
+        m_detected_id_count[m_dominant_id] = 0;
+        for(size_t i=0; i<m_detected_ids.size(); ++i) /* count only detected ids is reseted */
         {
-            if( marker_id < 0 ) { continue; }
+            if( m_detected_ids[i] < 0 ) { continue; }
+            m_detected_id_count[static_cast<size_t>( m_detected_ids[i] )] = 0;
+        }
+
+        for(size_t i=0; i<m_detected_ids.size(); ++i)
+        {
+            if( m_detected_ids[i] < 0 ) { continue; }
+            size_t idx = static_cast<size_t>( m_detected_ids[i]+1 );
+            m_detected_id_count[idx] += 1;
+            if( dominant_id_count >= m_detected_id_count[idx] ) { continue; }
+            dominant_id_count = m_detected_id_count[idx];
+            current_dominant_id = idx;
+        }
+        /* prefer last dominant id */
+        if( dominant_id_count > m_detected_id_count[m_dominant_id] ) { m_dominant_id = current_dominant_id; }
+        m_mutex.unlock(); /* ----------------------- */
+
+        if( m_detected_ids.empty()  )
+        {
+            if( last_recognized_marker == 0 ) { continue; }
             anti_flicker_count -= 1;
             if( anti_flicker_count > 0) { continue; }
-            emit passedThrough(marker_id, cv::getTickCount(), cv::getTickFrequency());
-            marker_id = -1;
+            emit passedThrough(static_cast<int>(last_recognized_marker)-1, last_detected_timestamp, cv::getTickFrequency());
+            last_recognized_marker = 0;
             continue;
         }
 
-        if( m_detected_corners.size() < 2 ) { continue; }
-
-        /* gate detection */
+        /* enableded area checking */
         cv::Point2f center(image.cols/2.f, image.rows/2.f);
-        std::vector<std::vector<cv::Point2f>>::iterator corner = m_detected_corners.begin();
-        for(; corner!=m_detected_corners.end(); ++corner)
+        size_t corner = 0;
+        for(; corner<m_detected_corners.size(); ++corner)
         {
-            cv::Point2f vec_a = (*corner)[1] - center;
-            cv::Point2f vec_b = (*corner)[0] - center;
+            if( m_detected_ids[corner] != (static_cast<int>(m_dominant_id)-1) ) { continue; }
+            cv::Point2f vec_a = m_detected_corners[corner][1] - center;
+            cv::Point2f vec_b = m_detected_corners[corner][0] - center;
 
-            /* if vector product < 0 break this loop */
+            /* if vector product < 0, break this loop */
             if( (vec_a.x*vec_b.y) < (vec_a.y*vec_b.x) ) { break; }
         }
-        if( corner == m_detected_corners.end() )
+        if( corner < m_detected_corners.size() )
         {
-            marker_id = m_detected_ids[0];
-            anti_flicker_count = 7;
-        } else
+            last_recognized_marker = 0;
+        } else if( dominant_id_count >= 2 )
         {
-            marker_id = -1;
+            last_recognized_marker = m_dominant_id;
         }
+
+        if( m_detected_id_count[last_recognized_marker] > 0 )
+        {
+            last_detected_timestamp = cv::getTickCount();
+            anti_flicker_count = 7;
+        }
+
+
     }
 
     m_detected_ids.clear();

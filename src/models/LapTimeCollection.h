@@ -31,7 +31,7 @@ public:
 
 public slots:
     void pilotDescChanged(QString pilot, int descriptor_idx, QVariant value);
-    void passedThrough(const QString& pilot, int id, qint64 tick_count, qint64 tick_frequency);
+    void passedThrough(const QString& pilot, int id, qint64 tick_count, double tick_frequency);
     void sectionCountChanged(int section_count);
 
 private:
