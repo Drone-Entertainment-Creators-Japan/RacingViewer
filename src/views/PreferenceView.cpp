@@ -12,6 +12,7 @@
 #include <QMetaEnum>
 #include <QDebug>
 #include <QTextToSpeech>
+#include <QCoreApplication>
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/aruco.hpp>
@@ -37,17 +38,17 @@ PreferenceView::PreferenceView(QSettings* p_settings, QWidget *parent) : QWidget
     QString path;
 
     path = mp_settings->value(m_options.valueToKey(Definitions::kPilotDir)).value<QString>();
-    if( path.isEmpty() ) { path = QDir::homePath(); }
+    if( path.isEmpty() ) { path = QCoreApplication::applicationDirPath(); }
     mp_ui->p_pilotdir->setText(path);
     isExistingDirectory(path, false, mp_ui->p_pilotdir);
 
     path = mp_settings->value(m_options.valueToKey(Definitions::kEventDir)).value<QString>();
-    if( path.isEmpty() ) { path = QDir::homePath(); }
+    if( path.isEmpty() ) { path = QCoreApplication::applicationDirPath(); }
     mp_ui->p_eventdir->setText(path);
     isExistingDirectory(path, false, mp_ui->p_eventdir);
 
     path = mp_settings->value(m_options.valueToKey(Definitions::kLayoutDir)).value<QString>();
-    if( path.isEmpty() ) { path = QDir::homePath(); }
+    if( path.isEmpty() ) { path = QCoreApplication::applicationDirPath(); }
     mp_ui->p_layoutdir->setText(path);
     isExistingDirectory(path, false, mp_ui->p_layoutdir);
 
