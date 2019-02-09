@@ -153,6 +153,8 @@ qint32 LapTimeRecord::setSectionTime(int section, qint64 tick)
     if( section >= m_laps[m_current_lap].count() ) { return 0; }
     if( m_frequency <= 0 ) { return 0; }
 
+    if( m_laps[m_current_lap][section] > 0 ) { return m_laps[m_current_lap][section]; }
+
     m_laps[m_current_lap][section] = static_cast<qint32>( (tick-m_last_tick)*1000./m_frequency + 0.5);
     m_last_tick = tick;
 

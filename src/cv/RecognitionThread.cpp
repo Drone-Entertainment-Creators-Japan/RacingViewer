@@ -129,7 +129,8 @@ void RecognitionThread::run(void)
 
         for(size_t i=0; i<m_detected_ids.size(); ++i)
         {
-            if( m_detected_ids[i] < 0 ) { continue; }
+            if( m_detected_ids[i] < 0               ) { continue; }
+            if( m_detected_ids[i] >= total_id_count ) { continue; }
             size_t idx = static_cast<size_t>( m_detected_ids[i]+1 );
             m_detected_id_count[idx] += 1;
             if( dominant_id_count >= m_detected_id_count[idx] ) { continue; }
@@ -153,14 +154,24 @@ void RecognitionThread::run(void)
         /* enableded area checking */
         cv::Point2f center(image.cols/2.f, image.rows/2.f);
         size_t corner = 0;
+        double min_edge_length = image.cols * parameters->minMarkerPerimeterRate;
         for(; corner<m_detected_corners.size(); ++corner)
         {
+            const std::vector<cv::Point2f>& points = m_detected_corners[corner];
+            if( points.size() < 4 ) { continue; }
             if( m_detected_ids[corner] != (static_cast<int>(m_dominant_id)-1) ) { continue; }
-            cv::Point2f vec_a = m_detected_corners[corner][1] - center;
-            cv::Point2f vec_b = m_detected_corners[corner][0] - center;
+            cv::Point2f vec_a = points[1] - center;
+            cv::Point2f vec_b = points[0] - center;
 
-            /* if vector product < 0, break this loop */
-            if( (vec_a.x*vec_b.y) < (vec_a.y*vec_b.x) ) { break; }
+            double max_edge_length = cv::norm(points[0] - points[3]);
+            for(size_t i=1; i<points.size(); ++i)
+            {
+                double len = cv::norm(points[i]-points[i-1]);
+                if( len > max_edge_length ) { max_edge_length = len; }
+            }
+            if( max_edge_length < min_edge_length ) { break; } /* marker is too small */
+
+            if( (vec_a.x*vec_b.y) < (vec_a.y*vec_b.x) ) { break; } /* if vector product < 0, break this loop */
         }
         if( corner < m_detected_corners.size() )
         {

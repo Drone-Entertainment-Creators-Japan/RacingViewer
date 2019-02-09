@@ -5,6 +5,7 @@
 #include "views/VideoAssignView.h"
 #include "views/CourseView.h"
 #include "views/LapView.h"
+#include "views/AboutView.h"
 #include "models/PilotListModel.h"
 #include "models/VideoSourceModel.h"
 #include "models/CourseModel.h"
@@ -70,7 +71,7 @@ MainWindow::MainWindow(QWidget* p_parent) : QWidget(p_parent)
         mp_tab->addTab( mp_pilot_list_view, tr("Pilots") );
         mp_tab->addTab( mp_course_view    , tr("Course") );
         mp_tab->addTab( mp_lap_view       , tr("Laptime") );
-//        mp_tab->addTab( new TestView, tr("Test") );
+        mp_tab->addTab( new AboutView()   , tr("About") );
     }
 
     for(int i=0; i<Definitions::kOptionsCount; ++i)
@@ -198,7 +199,7 @@ bool MainWindow::addVideoAssignView(void)
 {
     if( ! mp_tab ) { return false; }
     VideoAssignView* p_view = new VideoAssignView(mp_settings, mp_video_sources, mp_pilot_list);
-    mp_tab->addTab(p_view, tr("Screen 1"));
+    mp_tab->insertTab(mp_tab->count()-1, p_view, tr("Screen 1"));
     return true;
 }
 

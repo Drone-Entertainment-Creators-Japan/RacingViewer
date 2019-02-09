@@ -56,7 +56,8 @@ SOURCES += \
     ./itemdelegates/PointItemDelegate.cpp \
     ./cv/RecognitionThread.cpp \
     ./itemdelegates/ImageItemDelegate.cpp \
-    ./itemdelegates/FileItemDelegate.cpp
+    ./itemdelegates/FileItemDelegate.cpp \
+    views/AboutView.cpp
 
 HEADERS += \
     ./main/MainWindow.h \
@@ -87,12 +88,14 @@ HEADERS += \
     ./itemdelegates/PointItemDelegate.h \
     ./cv/ICVImageSource.h \
     ./cv/RecognitionThread.h \
-    ./itemdelegates/FileItemDelegate.h
+    ./itemdelegates/FileItemDelegate.h \
+    views/AboutView.h
 
 FORMS   += \
     ./views/CameraSettings.ui \
     ./views/PreferenceView.ui \
     ./views/PilotListView.ui \
+    views/AboutView.ui
 
 INCLUDEPATH += \
     /usr/local/include/opencv4
