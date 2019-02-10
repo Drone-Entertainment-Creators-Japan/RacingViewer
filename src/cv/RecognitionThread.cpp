@@ -8,7 +8,7 @@
 RecognitionThread::RecognitionThread(QObject* p_parent) : QThread(p_parent)
 , mp_source( nullptr )
 , m_loop   ( true )
-, m_dominant_id( -1 )
+, m_dominant_id( 0 )
 {
 
 }
@@ -100,7 +100,7 @@ void RecognitionThread::run(void)
     parameters->adaptiveThreshWinSizeMin  =  3;
     parameters->adaptiveThreshWinSizeMax  = 30;
     parameters->adaptiveThreshWinSizeStep =  3;
-    parameters->minMarkerPerimeterRate = 0.1;
+    parameters->minMarkerPerimeterRate = 0.05;
     parameters->maxMarkerPerimeterRate = 4.00;
 
     size_t last_recognized_marker = 0;
@@ -129,8 +129,8 @@ void RecognitionThread::run(void)
 
         for(size_t i=0; i<m_detected_ids.size(); ++i)
         {
-            if( m_detected_ids[i] < 0               ) { continue; }
-            if( m_detected_ids[i] >= total_id_count ) { continue; }
+            if( m_detected_ids[i] < 0 ) { continue; }
+            if( m_detected_ids[i] >= static_cast<int>(total_id_count) ) { continue; }
             size_t idx = static_cast<size_t>( m_detected_ids[i]+1 );
             m_detected_id_count[idx] += 1;
             if( dominant_id_count >= m_detected_id_count[idx] ) { continue; }
@@ -154,7 +154,7 @@ void RecognitionThread::run(void)
         /* enableded area checking */
         cv::Point2f center(image.cols/2.f, image.rows/2.f);
         size_t corner = 0;
-        double min_edge_length = image.cols * parameters->minMarkerPerimeterRate;
+        double min_edge_length = image.cols * parameters->minMarkerPerimeterRate/2;
         for(; corner<m_detected_corners.size(); ++corner)
         {
             const std::vector<cv::Point2f>& points = m_detected_corners[corner];

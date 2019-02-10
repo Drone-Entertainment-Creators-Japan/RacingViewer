@@ -21,6 +21,7 @@
 #include <QtWidgets/QStyleOptionTab>
 #include <QStandardItemModel>
 #include <QApplication>
+#include <QStandardPaths>
 #include <QSettings>
 #include <QTimer>
 #include <QDebug>
@@ -47,7 +48,8 @@ MainWindow::MainWindow(QWidget* p_parent) : QWidget(p_parent)
     mp_tab = new QTabWidget;
     mp_timer = new QTimer(this);
 
-    mp_settings   = new QSettings("RacingViewer.ini", QSettings::IniFormat);
+    QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
+    mp_settings   = new QSettings(path + "/RacingViewer.ini", QSettings::IniFormat);
     mp_pilot_list = new PilotListModel(this);
     mp_video_sources = new VideoSourceModel(this);
     mp_course        = new CourseModel(this);
