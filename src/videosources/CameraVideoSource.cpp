@@ -98,6 +98,33 @@ bool CameraVideoSource::present(const QVideoFrame& frame)
 {
     m_mutex.lock();
     m_current_frame = frame;
+
+    m_current_frame.map(QAbstractVideoBuffer::ReadOnly);
+    QImage image(
+                 m_current_frame.bits(),
+                 m_current_frame.width(),
+                 m_current_frame.height(),
+                 m_current_frame.bytesPerLine(),
+                 m_image_format);
+
+    if(    (m_current_frame.pixelFormat() == QVideoFrame::Format_RGB32)
+        || (m_current_frame.pixelFormat() == QVideoFrame::Format_ARGB32) )
+    {
+        m_current_image = image;
+    } else
+    {
+        bool need_resize = false;
+        need_resize |= m_current_image.width() != m_current_frame.width();
+        need_resize |= m_current_image.height() != m_current_frame.height();
+        if( need_resize )
+        {
+            m_current_image = QImage(m_current_frame.width(), m_current_frame.height(), QImage::Format_ARGB32);
+            m_current_image.fill(0);
+        }
+        QPainter painter(&m_current_image);
+        painter.drawImage(0, 0, image);
+    }
+    m_current_frame.unmap();
     m_mutex.unlock();
 
     if( mp_thread ) { mp_thread->update(); }
@@ -193,7 +220,7 @@ void CameraVideoSource::paint(QPainter* p_painter, const QRect& target_rect)
     bool is_ok = false;
     QMutexLocker locker( &m_mutex );
 
-    QSize source_size = m_current_frame.size();
+    QSize source_size = m_current_image.size();
     if( m_camera_aspect == Definitions::kAspect__4_3 ) { source_size = QSize( 4, 3); }
     if( m_camera_aspect == Definitions::kAspect_16_9 ) { source_size = QSize(16, 9); }
     if( source_size.width()  == 0 ) { return; }
@@ -202,49 +229,43 @@ void CameraVideoSource::paint(QPainter* p_painter, const QRect& target_rect)
     double   rate = target_rect.width()  / static_cast<double>(source_size.width());
     double v_rate = target_rect.height() / static_cast<double>(source_size.height());
     if( rate > v_rate ) { rate = v_rate; }
-    is_ok = m_current_frame.map(QAbstractVideoBuffer::ReadOnly);
-    if( ! is_ok ) { return; }
 
     QRect inner_rect(0, 0, static_cast<int>(source_size.width()*rate), static_cast<int>(source_size.height()*rate));
     inner_rect.moveCenter( QPoint(0, 0) );
 
     const QTransform oldTransform = p_painter->transform();
     p_painter->translate( target_rect.center() );
-    if (surfaceFormat().scanLineDirection() == QVideoSurfaceFormat::BottomToTop)
+    if( surfaceFormat().scanLineDirection() == QVideoSurfaceFormat::BottomToTop )
     {
         p_painter->scale(1, -1);
     }
 
-    QImage image(
-                 m_current_frame.bits(),
-                 m_current_frame.width(),
-                 m_current_frame.height(),
-                 m_current_frame.bytesPerLine(),
-                 m_image_format);
-
+    p_painter->drawImage(inner_rect, m_current_image, m_image_viewport);
     if( recognitionEnabled() )
     {
-        QPainter drawer(&image);
         QVector<QPoint> corner;
         mp_thread->getDetectedParameters(nullptr, &corner);
 
         QPen pen(Qt::red);
         pen.setWidth(3);
-        drawer.setPen(pen);
+        p_painter->setPen(pen);
+        QPoint center(source_size.width()/2, source_size.height()/2);
+        double x_rate = inner_rect.width()  / static_cast<double>(  m_current_image.size().width() );
+        double y_rate = inner_rect.height() / static_cast<double>(  m_current_image.size().height() );
         for(int i=0; i<corner.count(); i+=4)
         {
-            drawer.drawLine(corner[i], corner[i+1]);
+            QPoint first ( (corner[i].x()-center.x())*x_rate, (corner[i].y()-center.y())*y_rate );
+            QPoint second( (corner[i].x()-center.x())*x_rate, (corner[i].y()-center.y())*y_rate );
+            p_painter->drawLine(first, second);
         }
+        p_painter->drawLine(0, 0, 10, 10);
     }
-
-
-    p_painter->drawImage(inner_rect, image, m_image_viewport);
-    m_current_frame.unmap();
     locker.unlock();
 
-    p_painter->scale(1, 1);
-    p_painter->translate( inner_rect.topLeft() );
+    p_painter->setTransform(oldTransform);
+    p_painter->translate( target_rect.center() + inner_rect.topLeft() );
 
+    /* draw pilot name */
     if( ! m_pilot_name.isEmpty() && (inner_rect.height() > 200) )
     {
         double rate = inner_rect.height()/400.0;
@@ -334,52 +355,36 @@ QString CameraVideoSource::deviceID(void) const
 }
 
 /* ------------------------------------------------------------------------------------------------ */
-bool CameraVideoSource::getImage(cv::Mat& image)
+bool CameraVideoSource::getImage(cv::Mat& image, bool* p_is_bottom_to_top)
 {
     QMutexLocker locker( &m_mutex );
     if( ! mp_camera ) { return false; }
     if( ! m_active  ) { return false; }
 
-    if( m_current_frame.pixelFormat() != QVideoFrame::Format_ARGB32) { return false; }
+    bool is_ok = false;
+    QImage::Format format = m_current_image.format();
+    is_ok |= (format == QImage::Format_RGB32);
+    is_ok |= (format == QImage::Format_ARGB32);
+    if( ! is_ok ) { return false; }
+
     bool same = true;
     same &= (image.rows == m_current_frame.height() );
     same &= (image.cols == m_current_frame.width()  );
     same &= (image.type() == CV_8UC1);
-
     if( ! same ) { image.create(m_current_frame.height(), m_current_frame.width(), CV_8UC1); }
 
-    bool is_ok = m_current_frame.map(QAbstractVideoBuffer::ReadOnly);
-    if( ! is_ok ) { return false; }
-
-    const uchar* p_src = m_current_frame.bits();
+    const uchar* p_src = m_current_image.bits();
     uchar*       p_dst = image.data;
     uchar*       p_dst_end = image.data + image.total();
-    if( (! p_src) || (! p_dst) )
+    if( (! p_src) || (! p_dst) ) { return false; }
+
+    for(; p_dst < p_dst_end; p_dst+=1, p_src+=4)
     {
-        m_current_frame.unmap();
-        return false;
+        *p_dst = static_cast<uchar>( qGray(p_src[1], p_src[2],p_src[3]) );
     }
 
-    switch( static_cast<int>(m_current_frame.pixelFormat()) )
-    {
-        case QVideoFrame::Format_ARGB32:
-        {
-            for(; p_dst < p_dst_end; p_dst+=1, p_src+=4)
-            {
-                *p_dst = static_cast<uchar>( qGray(p_src[1], p_src[2],p_src[3]) );
-            }
-        } break;
+    if( p_is_bottom_to_top ) { *p_is_bottom_to_top = (surfaceFormat().scanLineDirection() == QVideoSurfaceFormat::BottomToTop);}
 
-        case QVideoFrame::Format_BGRA32:
-        {
-            for(; p_dst < p_dst_end; p_dst+=1, p_src+=4)
-            {
-                *p_dst = static_cast<uchar>( qGray(p_src[2], p_src[1],p_src[0]) );
-            }
-        } break;
-        default: /* nothing */ break;
-    }
-    m_current_frame.unmap();
     return true;
 }
 

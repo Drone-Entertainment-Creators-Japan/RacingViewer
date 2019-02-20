@@ -110,7 +110,9 @@ void RecognitionThread::run(void)
     {
         m_sem.acquire();
 
-        mp_source->getImage(image);
+        bool is_ok = mp_source->getImage(image);
+        if( ! is_ok ) { continue; }
+        cv::imwrite("Test.png", image);
 
         m_mutex.lock(); /* ----------------------- */
         size_t total_id_count = static_cast<size_t>(m_dictionary->bytesList.rows);

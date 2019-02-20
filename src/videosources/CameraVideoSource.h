@@ -47,7 +47,7 @@ public:
     Qt::ItemFlags itemFlags(int property) const override;
     QString deviceID(void) const override;
 
-    bool getImage(cv::Mat& image) override;
+    bool getImage(cv::Mat& image, bool* p_is_bottom_to_top) override;
 
 public slots:
     void pilotDescChanged(QString pilot, int descriptor_idx, QVariant value);
@@ -81,6 +81,7 @@ private:
     QRect          m_image_viewport;
     QImage::Format m_image_format;
     QVideoFrame    m_current_frame;
+    QImage         m_current_image;
 
     PilotListModel*    mp_pilot_list;
     LapTimeCollection* mp_laptime_list;

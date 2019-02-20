@@ -4,7 +4,7 @@
 #include <QThread>
 #include <QSemaphore>
 #include <QPoint>
-
+#include <QMutex>
 #include <opencv2/aruco.hpp>
 #include <opencv2/opencv.hpp>
 
