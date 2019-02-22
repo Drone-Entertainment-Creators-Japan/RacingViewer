@@ -47,7 +47,7 @@ public:
     Qt::ItemFlags itemFlags(int property) const override;
     QString deviceID(void) const override;
 
-    bool getImage(cv::Mat& image, bool* p_is_bottom_to_top) override;
+    bool getImage(cv::Mat& image) override;
 
 public slots:
     void pilotDescChanged(QString pilot, int descriptor_idx, QVariant value);

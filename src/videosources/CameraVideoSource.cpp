@@ -220,7 +220,8 @@ void CameraVideoSource::paint(QPainter* p_painter, const QRect& target_rect)
     bool is_ok = false;
     QMutexLocker locker( &m_mutex );
 
-    QSize source_size = m_current_image.size();
+    QSize source_size   = m_current_image.size();
+    QSize original_size = m_current_image.size();
     if( m_camera_aspect == Definitions::kAspect__4_3 ) { source_size = QSize( 4, 3); }
     if( m_camera_aspect == Definitions::kAspect_16_9 ) { source_size = QSize(16, 9); }
     if( source_size.width()  == 0 ) { return; }
@@ -241,6 +242,11 @@ void CameraVideoSource::paint(QPainter* p_painter, const QRect& target_rect)
     }
 
     p_painter->drawImage(inner_rect, m_current_image, m_image_viewport);
+
+    p_painter->setTransform(oldTransform);
+    p_painter->translate( target_rect.center() + inner_rect.topLeft() );
+
+    locker.unlock();
     if( recognitionEnabled() )
     {
         QVector<QPoint> corner;
@@ -250,21 +256,16 @@ void CameraVideoSource::paint(QPainter* p_painter, const QRect& target_rect)
         pen.setWidth(3);
         p_painter->setPen(pen);
         QPoint center(source_size.width()/2, source_size.height()/2);
-        double x_rate = inner_rect.width()  / static_cast<double>(  m_current_image.size().width() );
-        double y_rate = inner_rect.height() / static_cast<double>(  m_current_image.size().height() );
+        double x_rate = inner_rect.width()  / static_cast<double>( original_size.width()  );
+        double y_rate = inner_rect.height() / static_cast<double>( original_size.height() );
         for(int i=0; i<corner.count(); i+=4)
         {
-            QPoint first ( (corner[i].x()-center.x())*x_rate, (corner[i].y()-center.y())*y_rate );
-            QPoint second( (corner[i].x()-center.x())*x_rate, (corner[i].y()-center.y())*y_rate );
+//            qDebug() << corner[i];
+            QPoint first ( static_cast<int>(corner[i  ].x()*x_rate), static_cast<int>(corner[i  ].y()*y_rate) );
+            QPoint second( static_cast<int>(corner[i+1].x()*x_rate), static_cast<int>(corner[i+1].y()*y_rate) );
             p_painter->drawLine(first, second);
         }
-        p_painter->drawLine(0, 0, 10, 10);
     }
-    locker.unlock();
-
-    p_painter->setTransform(oldTransform);
-    p_painter->translate( target_rect.center() + inner_rect.topLeft() );
-
     /* draw pilot name */
     if( ! m_pilot_name.isEmpty() && (inner_rect.height() > 200) )
     {
@@ -355,7 +356,7 @@ QString CameraVideoSource::deviceID(void) const
 }
 
 /* ------------------------------------------------------------------------------------------------ */
-bool CameraVideoSource::getImage(cv::Mat& image, bool* p_is_bottom_to_top)
+bool CameraVideoSource::getImage(cv::Mat& image)
 {
     QMutexLocker locker( &m_mutex );
     if( ! mp_camera ) { return false; }
@@ -378,12 +379,24 @@ bool CameraVideoSource::getImage(cv::Mat& image, bool* p_is_bottom_to_top)
     uchar*       p_dst_end = image.data + image.total();
     if( (! p_src) || (! p_dst) ) { return false; }
 
-    for(; p_dst < p_dst_end; p_dst+=1, p_src+=4)
+    bool reverse = (surfaceFormat().scanLineDirection() == QVideoSurfaceFormat::BottomToTop);
+    if( reverse )
     {
-        *p_dst = static_cast<uchar>( qGray(p_src[1], p_src[2],p_src[3]) );
+        for(int i=m_current_frame.height()-1; i>=0;--i)
+        {
+            p_src = m_current_image.bits() + static_cast<size_t>(i*m_current_frame.width()) * sizeof(uint32_t);
+            p_dst_end = p_dst + static_cast<size_t>(m_current_frame.width()) * sizeof(uint8_t);
+            for(; p_dst < p_dst_end; p_dst+=1, p_src+=4)
+            {
+                *p_dst = static_cast<uchar>( qGray(p_src[1], p_src[2],p_src[3]) );
+            }
+        }
+    } else {
+        for(; p_dst < p_dst_end; p_dst+=1, p_src+=4)
+        {
+            *p_dst = static_cast<uchar>( qGray(p_src[1], p_src[2],p_src[3]) );
+        }
     }
-
-    if( p_is_bottom_to_top ) { *p_is_bottom_to_top = (surfaceFormat().scanLineDirection() == QVideoSurfaceFormat::BottomToTop);}
 
     return true;
 }
