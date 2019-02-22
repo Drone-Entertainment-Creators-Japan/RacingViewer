@@ -260,7 +260,7 @@ void CameraVideoSource::paint(QPainter* p_painter, const QRect& target_rect)
         double y_rate = inner_rect.height() / static_cast<double>( original_size.height() );
         for(int i=0; i<corner.count(); i+=4)
         {
-//            qDebug() << corner[i];
+            qDebug() << corner[i];
             QPoint first ( static_cast<int>(corner[i  ].x()*x_rate), static_cast<int>(corner[i  ].y()*y_rate) );
             QPoint second( static_cast<int>(corner[i+1].x()*x_rate), static_cast<int>(corner[i+1].y()*y_rate) );
             p_painter->drawLine(first, second);
