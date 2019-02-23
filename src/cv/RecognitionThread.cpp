@@ -200,8 +200,6 @@ void RecognitionThread::run(void)
             last_detected_timestamp = cv::getTickCount();
             anti_flicker_count = 7;
         }
-
-
     }
 
     m_detected_ids.clear();

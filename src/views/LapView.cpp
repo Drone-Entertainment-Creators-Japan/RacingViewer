@@ -61,6 +61,7 @@ LapView::LapView(QSettings* p_settings, VideoSourceModel* p_source, PilotListMod
 
     mp_pilot_select->setMinimumWidth(70);
     mp_preview->setMinimumHeight(70);
+    mp_preview->setViewLoad(true);
     if( mp_pilot_model )
     {
         for(int i=0; i<mp_pilot_model->rowCount(); ++i)

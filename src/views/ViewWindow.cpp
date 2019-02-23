@@ -248,12 +248,13 @@ void ViewWindow::paintEvent(QPaintEvent* p_event)
         if(   m_layouts[i]->isMoving() ) { continue; }
 
         p_render->paint(&painter, m_layouts[i]->geometry(), &inner_rect);
-        int msec = p_render->recognitionLoad();
-        if( (msec > 0) && m_view_load )
+        painter.setPen(Qt::white);
+        int load = p_render->recognitionLoad();
+        if( (load > 0) && m_view_load )
         {
             painter.setFont( QFont() );
-            painter.setPen(Qt::white);
-            painter.drawText(inner_rect, Qt::AlignLeft | Qt::AlignBottom, QString().sprintf("% 3d%%", msec)); }
+            if( load > 80 ) { painter.setPen(Qt::red); }
+            painter.drawText(inner_rect, Qt::AlignLeft | Qt::AlignBottom, QString().sprintf("% 3d%%", load)); }
         if( p_render != m_selected ) { continue; }
         painter.drawRect(inner_rect);
     }
