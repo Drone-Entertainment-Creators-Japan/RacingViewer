@@ -234,6 +234,10 @@ void ViewWindow::paintEvent(QPaintEvent* p_event)
     painter.setPen(Qt::red);
 
     int count = m_layouts.count();
+    QRect inner_rect;
+    painter.setPen(Qt::blue);
+
+    /* already moved video sources*/
     for(int i=0; i<count; ++i)
     {
         if( ! m_layouts[i] ) { continue; }
@@ -243,7 +247,8 @@ void ViewWindow::paintEvent(QPaintEvent* p_event)
         if( ! m_layouts[i]->isActive() ) { continue; }
         if(   m_layouts[i]->isMoving() ) { continue; }
 
-        p_render->paint(&painter, m_layouts[i]->geometry());
+        p_render->paint(&painter, m_layouts[i]->geometry(), &inner_rect);
+        int msec = p_render->recognitionLoad();
         if( (msec > 0) && m_view_load )
         {
             painter.setFont( QFont() );
