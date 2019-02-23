@@ -2,6 +2,7 @@
 #define VIDEOSOURCEMODEL_H
 
 #include <QStandardItemModel>
+#include <QTimer>
 
 class IVideoSource;
 
@@ -19,6 +20,7 @@ public:
 
     bool                    setVideoSources(const QList<IVideoSource*> sources);
     const QList<IVideoSource*> videoSources(void) const;
+
 
 public slots:
     void pilotDescChanged(QString pilot, int descriptor_idx, QVariant value); /* to update pilot name */

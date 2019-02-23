@@ -47,7 +47,7 @@ public:
         kSourceName,
         kDeviceID,
         kPilotAssign,
-        kGateRecognition,
+        kRecognition,
         kActiveState,
         kVideoSourceDescriptorCount
     };

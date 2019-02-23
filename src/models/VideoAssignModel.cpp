@@ -63,11 +63,11 @@ QVariant VideoAssignModel::headerData(int section, Qt::Orientation orientation, 
     {
         switch(section)
         {
-            case Definitions::kSourceName:      { return tr("Name");         } break;
-            case Definitions::kDeviceID:        { return tr("Devide ID");    } break;
-            case Definitions::kPilotAssign:     { return tr("Pilot");        } break;
-            case Definitions::kGateRecognition: { return tr("Recogunition"); } break;
-            case Definitions::kActiveState:     { return tr("Activate");     } break;
+            case Definitions::kSourceName:  { return tr("Name");         } break;
+            case Definitions::kDeviceID:    { return tr("Devide ID");    } break;
+            case Definitions::kPilotAssign: { return tr("Pilot");        } break;
+            case Definitions::kRecognition: { return tr("Recogunition"); } break;
+            case Definitions::kActiveState: { return tr("Activate");     } break;
             default: { /* nothing */ } break;
         }
 

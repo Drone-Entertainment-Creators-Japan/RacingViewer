@@ -20,6 +20,8 @@ public:
     explicit ViewWindow(QSettings* p_settings, QWidget* p_parent=nullptr);
             ~ViewWindow(void) override;
 
+    bool setViewLoad(bool enabled);
+
     bool setFixedLayout(const QVector<QRectF> layout, bool is_pixel=false);
     bool setFixedCutIn (const QVector<QRectF> cutin,  bool is_pixel=false);
 
@@ -50,18 +52,19 @@ private:
 
     QRect toRect(const QRectF rectf, bool is_pixel_size);
 private:
-    QMetaEnum                  m_options;
-    QSettings*                 mp_settings;
-    IVideoSource*              m_selected;
-    int                        m_pixel_margin;
-    QVector<QRectF>            m_fixed_layout;
-    bool                       m_fixed_layout_is_pixel;
-    QVector<QRectF>            m_fixed_cutin;
-    bool                       m_fixed_cutin_is_pixel;
-    QVector<ViewRect*>         m_layouts;
-    QRectF                     m_cutin_rect;
-    ViewRect*                  mp_cutin;
-    QTimer*                    mp_timer;
+    QMetaEnum          m_options;
+    QSettings*         mp_settings;
+    IVideoSource*      m_selected;
+    int                m_pixel_margin;
+    QVector<QRectF>    m_fixed_layout;
+    bool               m_fixed_layout_is_pixel;
+    QVector<QRectF>    m_fixed_cutin;
+    bool               m_fixed_cutin_is_pixel;
+    QVector<ViewRect*> m_layouts;
+    QRectF             m_cutin_rect;
+    ViewRect*          mp_cutin;
+    QTimer*            mp_timer;
+    bool               m_view_load;
 };
 
 /* ------------------------------------------------------------------------------------------------ */

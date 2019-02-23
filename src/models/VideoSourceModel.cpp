@@ -5,11 +5,11 @@
 /* ------------------------------------------------------------------------------------------------ */
 VideoSourceModel::VideoSourceModel(QObject* p_parent) : QStandardItemModel(0, Definitions::kVideoSourceDescriptorCount, p_parent)
 {
-    setHeaderData(Definitions::kSourceName     , Qt::Horizontal, tr("Name"));
-    setHeaderData(Definitions::kDeviceID       , Qt::Horizontal, tr("Device ID"));
-    setHeaderData(Definitions::kPilotAssign    , Qt::Horizontal, tr("Pilot"));
-    setHeaderData(Definitions::kGateRecognition, Qt::Horizontal, tr("Gate recognition"));
-    setHeaderData(Definitions::kActiveState    , Qt::Horizontal, tr("Activate"));
+    setHeaderData(Definitions::kSourceName , Qt::Horizontal, tr("Name"));
+    setHeaderData(Definitions::kDeviceID   , Qt::Horizontal, tr("Device ID"));
+    setHeaderData(Definitions::kPilotAssign, Qt::Horizontal, tr("Pilot"));
+    setHeaderData(Definitions::kRecognition, Qt::Horizontal, tr("Gate recognition"));
+    setHeaderData(Definitions::kActiveState, Qt::Horizontal, tr("Activate"));
 }
 
 /* ------------------------------------------------------------------------------------------------ */
@@ -80,7 +80,6 @@ QVariant VideoSourceModel::data(const QModelIndex& index, int role) const
         value = m_sources[row]->value(col);
         if( (role == Qt::CheckStateRole) && (  value.toBool()) ) { return Qt::Checked;   }
         if( (role == Qt::CheckStateRole) && (! value.toBool()) ) { return Qt::Unchecked; }
-//        return value;
         return QVariant();
     }
 
@@ -119,8 +118,8 @@ bool VideoSourceModel::setVideoSources(const QList<IVideoSource*> sources)
         for(int col=0; col<Definitions::kVideoSourceDescriptorCount; ++col)
         {
             int role = Qt::EditRole;
-            if( col == Definitions::kActiveState     ) { role = Qt::CheckStateRole; }
-            if( col == Definitions::kGateRecognition ) { role = Qt::CheckStateRole; }
+            if( col == Definitions::kActiveState ) { role = Qt::CheckStateRole; }
+            if( col == Definitions::kRecognition ) { role = Qt::CheckStateRole; }
             setData(index(row,col), m_sources[row]->value(col), role );
         }
     }
@@ -160,4 +159,3 @@ void VideoSourceModel::pilotDescChanged(QString pilot, int descriptor_idx, QVari
         return;
     }
 }
-

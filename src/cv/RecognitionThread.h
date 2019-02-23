@@ -31,6 +31,8 @@ public:
 
     void getDetectedParameters(QVector<int>* p_ids, QVector<QPoint>* p_corners);
 
+    uint32_t lastProcessingTime(void) const;
+
 signals:
     void passedThrough(int id, qint64 tick_count, double tick_frequency);
 
@@ -50,6 +52,8 @@ private:
     std::vector<int>                      m_detected_id_count;
     size_t                                m_dominant_id;       /* 1 origin. 0 represents null */
     std::vector<std::vector<cv::Point2f>> m_detected_corners;
+
+    uint32_t                              m_last_processing_time;
 
 };
 

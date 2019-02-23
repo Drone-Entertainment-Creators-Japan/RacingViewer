@@ -9,6 +9,7 @@ RecognitionThread::RecognitionThread(QObject* p_parent) : QThread(p_parent)
 , mp_source( nullptr )
 , m_loop   ( true )
 , m_dominant_id( 0 )
+, m_last_processing_time( 0 )
 {
 
 }
@@ -73,16 +74,22 @@ void RecognitionThread::getDetectedParameters(QVector<int>* p_ids, QVector<QPoin
         for(; dst != p_corners->end(); dst+=4, src+=1)
         {
             if( src->size() < 4 ) { continue; }
-            (dst  )->setX(  static_cast<int>((*src)[0].x) );
-            (dst  )->setY(  static_cast<int>((*src)[0].y) );
-            (dst+1)->setX(  static_cast<int>((*src)[1].x) );
-            (dst+1)->setY(  static_cast<int>((*src)[1].y) );
-            (dst+2)->setX(  static_cast<int>((*src)[2].x) );
-            (dst+2)->setY(  static_cast<int>((*src)[2].y) );
-            (dst+3)->setX(  static_cast<int>((*src)[3].x) );
-            (dst+3)->setY(  static_cast<int>((*src)[3].y) );
+            (dst  )->setX( static_cast<int>((*src)[0].x) );
+            (dst  )->setY( static_cast<int>((*src)[0].y) );
+            (dst+1)->setX( static_cast<int>((*src)[1].x) );
+            (dst+1)->setY( static_cast<int>((*src)[1].y) );
+            (dst+2)->setX( static_cast<int>((*src)[2].x) );
+            (dst+2)->setY( static_cast<int>((*src)[2].y) );
+            (dst+3)->setX( static_cast<int>((*src)[3].x) );
+            (dst+3)->setY( static_cast<int>((*src)[3].y) );
         }
     }
+}
+
+/* ------------------------------------------------------------------------------------------------ */
+uint32_t RecognitionThread::lastProcessingTime(void) const
+{
+    return m_last_processing_time;
 }
 
 /* ------------------------------------------------------------------------------------------------ */
@@ -106,10 +113,16 @@ void RecognitionThread::run(void)
     size_t last_recognized_marker = 0;
     int anti_flicker_count = 0;
     qint64 last_detected_timestamp = 0;
+    qint64 start_processing_timestamp = cv::getTickCount();
     while( m_loop )
     {
+        m_mutex.lock();
+        m_last_processing_time = static_cast<int32_t>((cv::getTickCount() - start_processing_timestamp) * 1000. / cv::getTickFrequency());
+        m_mutex.unlock();
+
         m_sem.acquire();
 
+        start_processing_timestamp = cv::getTickCount();
         bool is_ok = mp_source->getImage(image);
         if( ! is_ok ) { continue; }
 

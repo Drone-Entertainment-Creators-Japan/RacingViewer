@@ -45,6 +45,7 @@ VideoAssignView::VideoAssignView(QSettings* p_settings, VideoSourceModel* p_sour
 
     mp_preview = new ViewWindow(p_settings);
     mp_preview->setMinimumHeight(100);
+    mp_preview->setViewLoad(true);
     connect(mp_preview, SIGNAL(mousePressed(IVideoSource*)),  this, SLOT(mousePressed(IVideoSource*)));
     connect(mp_preview, SIGNAL(doubleClicked(IVideoSource*)), this, SLOT(doubleClicked(IVideoSource*)));
 

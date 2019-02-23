@@ -137,7 +137,8 @@ void MainWindow::timeout(void)
 
             CameraVideoSource* p_target = dynamic_cast<CameraVideoSource*>(sources[index]);
             bool available = (! p_target);
-            if( p_target ) { available |= (p_target->deviceID() == info.deviceName()); }
+            QString device_id = p_target->value(Definitions::kDeviceID).toString();
+            if( p_target ) { available |= (device_id == info.deviceName()); }
 
             if( ! available ) { continue; }
             new_sources.push_back(sources[index]);

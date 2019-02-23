@@ -41,13 +41,14 @@ public:
 
     bool setARMarkerType(const QString& type);
 
-    void paint(QPainter* p_painter, const QRect& target_rect) override;
+    void paint(QPainter* p_painter, const QRect& target_rect, QRect* p_inner_rect) override;
     QVariant  value(int property) const override;
     bool   setValue(int property, const QVariant& value) override;
     Qt::ItemFlags itemFlags(int property) const override;
-    QString deviceID(void) const override;
+    int recognitionLoad(void) const override;
 
     bool getImage(cv::Mat& image) override;
+
 
 public slots:
     void pilotDescChanged(QString pilot, int descriptor_idx, QVariant value);

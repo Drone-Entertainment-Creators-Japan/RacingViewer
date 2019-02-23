@@ -215,7 +215,7 @@ bool CameraVideoSource::setARMarkerType(const QString& type)
 }
 
 /* ------------------------------------------------------------------------------------------------ */
-void CameraVideoSource::paint(QPainter* p_painter, const QRect& target_rect)
+void CameraVideoSource::paint(QPainter* p_painter, const QRect& target_rect, QRect* p_inner_rect)
 {
     bool is_ok = false;
     QMutexLocker locker( &m_mutex );
@@ -232,6 +232,11 @@ void CameraVideoSource::paint(QPainter* p_painter, const QRect& target_rect)
     if( rate > v_rate ) { rate = v_rate; }
 
     QRect inner_rect(0, 0, static_cast<int>(source_size.width()*rate), static_cast<int>(source_size.height()*rate));
+    if( p_inner_rect )
+    {
+        *p_inner_rect = inner_rect;
+        p_inner_rect->moveCenter( target_rect.center() );
+    }
     inner_rect.moveCenter( QPoint(0, 0) );
 
     const QTransform oldTransform = p_painter->transform();
@@ -306,11 +311,11 @@ QVariant CameraVideoSource::value(int property) const
 {
     switch( property )
     {
-        case Definitions::kSourceName:      { return m_name;       } break;
-        case Definitions::kDeviceID:        { return m_device_id;  } break;
-        case Definitions::kPilotAssign:     { return m_pilot_name; } break;
-        case Definitions::kGateRecognition: { return recognitionEnabled(); } break;
-        case Definitions::kActiveState:     { return m_active;     } break;
+        case Definitions::kSourceName:  { return m_name;       } break;
+        case Definitions::kDeviceID:    { return m_device_id;  } break;
+        case Definitions::kPilotAssign: { return m_pilot_name; } break;
+        case Definitions::kRecognition: { return recognitionEnabled(); } break;
+        case Definitions::kActiveState: { return m_active;     } break;
         default: {} break;
     }
 
@@ -322,11 +327,11 @@ bool CameraVideoSource::setValue(int property, const QVariant& value)
 {
     switch( property )
     {
-        case Definitions::kSourceName:      { m_name = value.toString();       } break;
-        case Definitions::kDeviceID:        { return true; } break;
-        case Definitions::kPilotAssign:     { return setPilot(value.toString()); } break;
-        case Definitions::kGateRecognition: { setRecognitionEnabled( value.toBool() );  } break;
-        case Definitions::kActiveState:     { setActive(value.toBool()); } break;
+        case Definitions::kSourceName:  { m_name = value.toString();       } break;
+        case Definitions::kDeviceID:    { return true; } break;
+        case Definitions::kPilotAssign: { return setPilot(value.toString()); } break;
+        case Definitions::kRecognition: { setRecognitionEnabled( value.toBool() );  } break;
+        case Definitions::kActiveState: { setActive(value.toBool()); } break;
         default: { return false; } break;
     }
 
@@ -338,11 +343,11 @@ Qt::ItemFlags CameraVideoSource::itemFlags(int property) const
 {
     switch( property )
     {
-        case Definitions::kSourceName:      { return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable; } break;
-        case Definitions::kDeviceID:        { return Qt::ItemIsSelectable; } break;
-        case Definitions::kPilotAssign:     { return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable; } break;
-        case Definitions::kGateRecognition: { return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsUserCheckable; } break;
-        case Definitions::kActiveState:     { return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsUserCheckable; } break;
+        case Definitions::kSourceName:  { return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable; } break;
+        case Definitions::kDeviceID:    { return Qt::ItemIsSelectable; } break;
+        case Definitions::kPilotAssign: { return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable; } break;
+        case Definitions::kRecognition: { return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsUserCheckable; } break;
+        case Definitions::kActiveState: { return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsUserCheckable; } break;
         default: {} break;
     }
 
@@ -350,9 +355,15 @@ Qt::ItemFlags CameraVideoSource::itemFlags(int property) const
 }
 
 /* ------------------------------------------------------------------------------------------------ */
-QString CameraVideoSource::deviceID(void) const
+int CameraVideoSource::recognitionLoad(void) const
 {
-    return m_device_id;
+    if( ! mp_thread            ) { return 0; }
+    if( ! recognitionEnabled() ) { return 0; }
+    if( ! mp_camera            ) { return 0; }
+    QCameraViewfinderSettings settings = mp_camera->viewfinderSettings();
+    double frame_rate = settings.minimumFrameRate();
+
+    return static_cast<int>( mp_thread->lastProcessingTime() * frame_rate / 10. );
 }
 
 /* ------------------------------------------------------------------------------------------------ */

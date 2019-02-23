@@ -20,6 +20,7 @@ ViewWindow::ViewWindow(QSettings* p_settings, QWidget *parent) : QWidget(parent)
 , m_fixed_cutin_is_pixel ( false )
 , mp_cutin       ( nullptr )
 , mp_timer       ( nullptr )
+, m_view_load    ( false   )
 {
     setFixedCutIn(QVector<QRectF>(), false);
 
@@ -50,6 +51,13 @@ ViewWindow::~ViewWindow(void)
         delete m_layouts[i];
     }
     delete mp_cutin;
+}
+
+/* ------------------------------------------------------------------------------------------------ */
+bool ViewWindow::setViewLoad(bool enabled)
+{
+    m_view_load = enabled;
+    return true;
 }
 
 /* ------------------------------------------------------------------------------------------------ */
@@ -236,10 +244,16 @@ void ViewWindow::paintEvent(QPaintEvent* p_event)
         if(   m_layouts[i]->isMoving() ) { continue; }
 
         p_render->paint(&painter, m_layouts[i]->geometry());
+        if( (msec > 0) && m_view_load )
+        {
+            painter.setFont( QFont() );
+            painter.setPen(Qt::white);
+            painter.drawText(inner_rect, Qt::AlignLeft | Qt::AlignBottom, QString().sprintf("% 3d%%", msec)); }
         if( p_render != m_selected ) { continue; }
-        painter.drawRect(m_layouts[i]->geometry());
+        painter.drawRect(inner_rect);
     }
 
+    /* moving video sources */
     for(int i=0; i<count; ++i)
     {
         if( ! m_layouts[i] ) { continue; }
@@ -250,9 +264,6 @@ void ViewWindow::paintEvent(QPaintEvent* p_event)
         if( ! m_layouts[i]->isMoving() ) { continue; }
 
         p_render->paint(&painter, m_layouts[i]->geometry());
-        if( p_render != m_selected ) { continue; }
-        painter.setPen(Qt::blue);
-        painter.drawRect(m_layouts[i]->geometry());
     }
 
     if( ! mp_cutin ) { return; }
