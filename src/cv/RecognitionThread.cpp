@@ -117,7 +117,7 @@ void RecognitionThread::run(void)
     while( m_loop )
     {
         m_mutex.lock();
-        m_last_processing_time = static_cast<int32_t>((cv::getTickCount() - start_processing_timestamp) * 1000. / cv::getTickFrequency());
+//        m_last_processing_time = static_cast<int32_t>((cv::getTickCount() - start_processing_timestamp) * 1000. / cv::getTickFrequency());
         m_mutex.unlock();
 
         m_sem.acquire();
@@ -130,6 +130,7 @@ void RecognitionThread::run(void)
         size_t total_id_count = static_cast<size_t>(m_dictionary->bytesList.rows);
         cv::aruco::detectMarkers(image, m_dictionary, m_detected_corners, m_detected_ids, parameters);
         if( m_detected_id_count.size() < (total_id_count+1) ) { m_detected_id_count.resize( total_id_count + 1 ); } /* first element is used to avoid buffer overrun */
+        m_last_processing_time = static_cast<int32_t>((cv::getTickCount() - start_processing_timestamp) * 1000. / cv::getTickFrequency());
 
         /* dominant id detection */
         size_t current_dominant_id = 0;

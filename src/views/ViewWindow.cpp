@@ -254,7 +254,11 @@ void ViewWindow::paintEvent(QPaintEvent* p_event)
         {
             painter.setFont( QFont() );
             if( load > 80 ) { painter.setPen(Qt::red); }
-            painter.drawText(inner_rect, Qt::AlignLeft | Qt::AlignBottom, QString().sprintf("% 3d%%", load)); }
+            QString text;
+            text.sprintf("% 3d%%", load);
+            QRect bound_rect = painter.boundingRect(inner_rect, Qt::AlignLeft | Qt::AlignBottom, text);
+            painter.fillRect(bound_rect, QBrush( QColor(0u, 0u, 0u, 200u)));
+            painter.drawText(bound_rect, text); }
         if( p_render != m_selected ) { continue; }
         painter.drawRect(inner_rect);
     }
