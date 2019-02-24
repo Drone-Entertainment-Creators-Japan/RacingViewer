@@ -42,6 +42,8 @@ public slots:
     void afterRemove(void);
 
 private:
+    void changeEvent(QEvent* p_event) override;
+    void keyPressEvent(QKeyEvent* p_event) override;
     void paintEvent(QPaintEvent*   p_event) override;
     void resizeEvent(QResizeEvent* p_event) override;
 

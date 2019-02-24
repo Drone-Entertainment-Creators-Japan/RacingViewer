@@ -226,6 +226,29 @@ void ViewWindow::afterRemove(void)
 }
 
 /* ------------------------------------------------------------------------------------------------ */
+void ViewWindow::changeEvent(QEvent* p_event)
+{
+    if( ! p_event ) { return; }
+    if( p_event->type() == QEvent::WindowStateChange )
+    {
+        if( this->windowState() == Qt::WindowMaximized )
+        {
+            setWindowState( Qt::WindowFullScreen );
+        }
+    }
+}
+
+/* ------------------------------------------------------------------------------------------------ */
+void ViewWindow::keyPressEvent(QKeyEvent* p_event)
+{
+    if( ! p_event ) { return; }
+    if( this->windowState() != Qt::WindowFullScreen ) { return; }
+    if( p_event->key() != Qt::Key_Escape ) { return; }
+
+    setWindowState( Qt::WindowNoState );
+}
+
+/* ------------------------------------------------------------------------------------------------ */
 void ViewWindow::paintEvent(QPaintEvent* p_event)
 {
     QPainter painter(this);
