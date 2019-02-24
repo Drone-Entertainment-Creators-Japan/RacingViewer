@@ -95,26 +95,34 @@ FORMS   += \
     ./views/CameraSettings.ui \
     ./views/PreferenceView.ui \
     ./views/PilotListView.ui \
-    views/AboutView.ui
+    ./views/AboutView.ui
 
-INCLUDEPATH += \
-    /usr/local/include/opencv4
-#    $$OPENCV/include
-
-LIBS += \
-    /usr/local/lib/libopencv_world.dylib
-#    $$OPENCV/x64/mingw/lib/libopencv_world401.dll.a
-
-LD_LIBRARY_PATH += \
-    $$OPENCV/x64/mingw/bin
+RESOURCES += \
+    resources/Resources.qrc
 
 ICON = ./resources/icons/app.icns
+
+
+win32-msvc
+{
+    INCLUDEPATH += $$(OPENCV_INSTALL)/include
+    LIBS += $$(OPENCV_INSTALL)/x64/vc15/lib/opencv_world401.lib
+#    CONFIG(debug,   debug|release) { LIBS += $$(OPENCV_INSTALL)/x64/vc15/lib/opencv_world401d.lib }
+#    CONFIG(release, debug|release) { LIBS += $$(OPENCV_INSTALL)/x64/vc15/lib/opencv_world401.lib  }
+}
+
+win32-g++
+{
+    INCLUDEPATH += $$(OPENCV_INSTALL)/include
+    LIBS        += $$(OPENCV_INSTALL)/x64/mingw/lib/libopencv_world401.dll.a
+}
+
+
+macx: INCLUDEPATH += /usr/local/include/opencv4
+macx: LIBS        += /usr/local/lib/libopencv_world.dylib
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
-RESOURCES += \
-    resources/Resources.qrc
 

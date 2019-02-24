@@ -18,6 +18,9 @@ public:
 
     bool eventFilter(QObject* p_watched, QEvent* p_event);
 
+public slots:
+    void doubleClicked(const QModelIndex& index);
+
 private:
     QMetaEnum       m_options;
     Ui::PilotListView* mp_ui;

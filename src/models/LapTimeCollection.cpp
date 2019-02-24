@@ -38,7 +38,7 @@ bool LapTimeCollection::setPoolDirectory(QString path)
 
     QDir directory(m_path);
     QStringList filters;
-    filters << "*" + Definitions::kTxtPilotFileExtention;
+    filters << "*" + Definitions::kTxtLapTimeFileExtention;
     directory.setNameFilters( filters );
     QStringList list = directory.entryList(QDir::Files);
 
@@ -61,6 +61,7 @@ QString LapTimeCollection::poolDirectory(void)
     return m_path;
 }
 
+/* ------------------------------------------------------------------------------------------------ */
 bool LapTimeCollection::setSpeechEnable(bool enable)
 {
     m_speech_enable = enable;

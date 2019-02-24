@@ -24,6 +24,9 @@ public:
 
     void paint(QPainter* p_painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+
+public slots:
+    void currentIndexChanged(int idx);
 };
 
 #endif /* POINTTYPEITEMDELEGATE_H */

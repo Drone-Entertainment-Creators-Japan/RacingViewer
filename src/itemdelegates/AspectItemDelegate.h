@@ -21,6 +21,9 @@ public:
     void setModelData(QWidget* p_editor, QAbstractItemModel* p_model,const QModelIndex& index) const;
 
     void updateEditorGeometry(QWidget* p_editor, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+
+public slots:
+    void currentIndexChanged(int idx);
 };
 
 #endif /* ASPECTITEMDELEGATE_H */

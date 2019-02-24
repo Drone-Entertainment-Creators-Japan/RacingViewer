@@ -24,7 +24,9 @@ void AspectItemDelegate::setEditorData(QWidget* p_editor, const QModelIndex& ind
     QString value = index.model()->data(index, Qt::EditRole).value<QString>();
 
     QComboBox* p_box = qobject_cast<QComboBox*>(p_editor);
-    if( p_box ) { p_box->setCurrentText(value); }
+    if( ! p_box ) { return; }
+    p_box->setCurrentText(value);
+    connect(p_box, SIGNAL(currentIndexChanged(int)), this, SLOT(currentIndexChanged(int)));
 }
 
 /* ------------------------------------------------------------------------------------------------ */
@@ -40,4 +42,12 @@ void AspectItemDelegate::setModelData(QWidget* p_editor, QAbstractItemModel* p_m
 void AspectItemDelegate::updateEditorGeometry(QWidget* p_editor, const QStyleOptionViewItem&option, const QModelIndex& index ) const
 {
     if( p_editor ) { p_editor->setGeometry(option.rect); }
+}
+
+/* ------------------------------------------------------------------------------------------------ */
+void AspectItemDelegate::currentIndexChanged(int idx)
+{
+    QComboBox* p_box = static_cast<QComboBox*>(sender());
+    if(! p_box) { return; }
+    emit commitData(p_box);
 }

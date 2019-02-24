@@ -217,7 +217,6 @@ bool CameraVideoSource::setARMarkerType(const QString& type)
 /* ------------------------------------------------------------------------------------------------ */
 void CameraVideoSource::paint(QPainter* p_painter, const QRect& target_rect, QRect* p_inner_rect)
 {
-    bool is_ok = false;
     QMutexLocker locker( &m_mutex );
 
     QSize source_size   = m_current_image.size();

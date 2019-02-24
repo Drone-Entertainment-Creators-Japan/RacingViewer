@@ -64,7 +64,9 @@ bool PilotListModel::refresh(void)
 
     }
     setHeaderData( list.count(), Qt::Vertical, "");
-    QStandardItemModel::setData(QStandardItemModel::index(list.count(), Definitions::kPilotName), "");
+    QStandardItemModel::setData(QStandardItemModel::index(list.count(), Definitions::kPilotName)       , "");
+    QStandardItemModel::setData(QStandardItemModel::index(list.count(), Definitions::kPilotColor)       , QColor(Qt::white));
+    QStandardItemModel::setData(QStandardItemModel::index(list.count(), Definitions::kCameraAspectRatio), Definitions::kTxtAspect_None);
 
     m_write_enabled = true;
     return true;
@@ -98,8 +100,6 @@ QVariant PilotListModel::valueOf(int pilot_idx, int descriptor_idx) const
 bool PilotListModel::setValueOf(int pilot_idx, int descriptor_idx, const QVariant& value)
 {
     QModelIndex index = this->index(pilot_idx, descriptor_idx);
-    if( static_cast<int>(value.type()) == QMetaType::QImage ) { this->setData(index, value, Qt::DecorationRole); }
-    if( static_cast<int>(value.type()) == QMetaType::QColor ) { this->setData(index, value, Qt::DecorationRole); }
     return this->setData(index, value, Qt::EditRole);
 }
 
@@ -159,7 +159,9 @@ bool PilotListModel::setData(const QModelIndex& index, const QVariant& value, in
     {
         insertRow( pilot_idx+1 );
         setHeaderData( pilot_idx+1, Qt::Vertical, QString());
-        QStandardItemModel::setData(QStandardItemModel::index(pilot_idx+1, Definitions::kPilotName), "");
+        QStandardItemModel::setData(QStandardItemModel::index(pilot_idx+1, Definitions::kPilotName)        , "");
+        QStandardItemModel::setData(QStandardItemModel::index(pilot_idx+1, Definitions::kPilotColor)       , QColor(Qt::white));
+        QStandardItemModel::setData(QStandardItemModel::index(pilot_idx+1, Definitions::kCameraAspectRatio), Definitions::kTxtAspect_None);
     }
     settings.sync();
     if( ! directory.exists(filename + Definitions::kTxtPilotFileExtention) )

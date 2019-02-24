@@ -32,7 +32,9 @@ void PointTypeItemDelegate::setEditorData(QWidget* p_editor, const QModelIndex& 
     QString type_text = Definitions::toTextPointType(type);
 
     QComboBox* p_box = qobject_cast<QComboBox*>(p_editor);
-    if( p_box ) { p_box->setCurrentText(type_text); }
+    if( ! p_box ) { return; }
+    p_box->setCurrentIndex(type);
+    connect(p_box, SIGNAL(currentIndexChanged(int)), this, SLOT(currentIndexChanged(int)));
 }
 
 /* ------------------------------------------------------------------------------------------------ */
@@ -74,3 +76,10 @@ QSize PointTypeItemDelegate::sizeHint(const QStyleOptionViewItem& option, const 
     return metrics.boundingRect(type_text).size();
 }
 
+/* ------------------------------------------------------------------------------------------------ */
+void PointTypeItemDelegate::currentIndexChanged(int idx)
+{
+    QComboBox* p_box = static_cast<QComboBox*>(sender());
+    if(! p_box) { return; }
+    emit commitData(p_box);
+}

@@ -26,6 +26,9 @@ public:
 
     void updateEditorGeometry(QWidget* p_editor, const QStyleOptionViewItem& option, const QModelIndex& index) const;
 
+public slots:
+    void currentIndexChanged(int idx);
+
 private:
     QMetaEnum       m_options;
     QSettings*      mp_settings;

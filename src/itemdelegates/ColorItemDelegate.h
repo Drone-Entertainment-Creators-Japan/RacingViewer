@@ -1,9 +1,9 @@
 #ifndef COLORITEMDELEGATE_H
 #define COLORITEMDELEGATE_H
 
-#include <QItemDelegate>
+#include <QAbstractItemDelegate>
 
-class ColorItemDelegate : public QItemDelegate
+class ColorItemDelegate : public QAbstractItemDelegate
 {
     Q_OBJECT
 public:
@@ -13,8 +13,8 @@ public:
     void setEditorData(QWidget* p_editor, const QModelIndex& index) const override;
     void setModelData(QWidget* p_editor, QAbstractItemModel* p_model, const QModelIndex& index) const override;
 
-    void drawDecoration(QPainter* p_painter, const QStyleOptionViewItem& option, const QRect& rect, const QPixmap& pixmap) const override;
-    void drawDisplay   (QPainter* p_painter, const QStyleOptionViewItem& option, const QRect& rect, const QString& text  ) const override;
+    void paint(QPainter* p_painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
+    QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
 };
 
 #endif /* COLORITEMDELEGATE_H */
