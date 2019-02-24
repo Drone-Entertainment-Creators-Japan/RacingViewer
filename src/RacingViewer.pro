@@ -100,7 +100,8 @@ FORMS   += \
 RESOURCES += \
     resources/Resources.qrc
 
-ICON = ./resources/icons/app.icns
+RC_ICONS = ./resources/icons/app.ico
+ICON     = ./resources/icons/app.icns
 
 
 win32-msvc
