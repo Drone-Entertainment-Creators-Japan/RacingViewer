@@ -26,8 +26,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++11
 
-OPENCV = C:/Projects/RacingViewer/lib/opencv-4.0.1/build
-
 SOURCES += \
     ./main/main.cpp \
     ./main/MainWindow.cpp \
@@ -103,23 +101,23 @@ RESOURCES += \
 ICON = ./resources/icons/app.icns
 
 
-win32-msvc
-{
+win32-msvc {
+    message(msvc)
     INCLUDEPATH += $$(OPENCV_INSTALL)/include
     LIBS += $$(OPENCV_INSTALL)/x64/vc15/lib/opencv_world401.lib
-#    CONFIG(debug,   debug|release) { LIBS += $$(OPENCV_INSTALL)/x64/vc15/lib/opencv_world401d.lib }
-#    CONFIG(release, debug|release) { LIBS += $$(OPENCV_INSTALL)/x64/vc15/lib/opencv_world401.lib  }
 }
 
-win32-g++
-{
+win32-g++ {
+    message(mingw)
     INCLUDEPATH += $$(OPENCV_INSTALL)/include
     LIBS        += $$(OPENCV_INSTALL)/x64/mingw/lib/libopencv_world401.dll.a
 }
 
-
-macx: INCLUDEPATH += /usr/local/include/opencv4
-macx: LIBS        += /usr/local/lib/libopencv_world.dylib
+macx {
+    message(mac)
+    INCLUDEPATH += /usr/local/include/opencv4
+    LIBS        += /usr/local/lib/libopencv_world.dylib
+}
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
