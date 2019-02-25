@@ -246,7 +246,8 @@ QVector<QRectF> VideoAssignView::readRects(const QString& filepath, bool* p_is_p
         double y      = 0;
         double width  = 0;
         double height = 0;
-        int cnt = sscanf(line.data(), "%*[^0123456789]%lf%*[^0123456789]%lf%*[^0123456789]%lf%*[^0123456789]%lf", &x, &y, &width, &height);
+        line.replace(' ', "");
+        int cnt = sscanf(line.data(), "%lf,%lf,%lf,%lf", &x, &y, &width, &height);
         if( cnt < 4 ) { continue; }
 
         result.push_back( QRectF(x, y, width, height));

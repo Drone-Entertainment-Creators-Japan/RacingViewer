@@ -45,7 +45,9 @@ void FileItemDelegate::setEditorData(QWidget* p_editor, const QModelIndex& index
     QString text = index.model()->data(index, Qt::EditRole).toString();
 
     QComboBox* p_box = qobject_cast<QComboBox*>(p_editor);
-    if( p_box ) { p_box->setCurrentText(text); }
+    if( ! p_box ) { return; }
+    p_box->setCurrentText(text);
+    connect(p_box, SIGNAL(currentIndexChanged(int)), this, SLOT(currentIndexChanged(int)));
 }
 
 /* ------------------------------------------------------------------------------------------------ */
@@ -82,3 +84,10 @@ QSize FileItemDelegate::sizeHint(const QStyleOptionViewItem& option, const QMode
     return metrics.boundingRect(index.data().toString()).size();
 }
 
+/* ------------------------------------------------------------------------------------------------ */
+void FileItemDelegate::currentIndexChanged(int idx)
+{
+    QComboBox* p_box = static_cast<QComboBox*>(sender());
+    if(! p_box) { return; }
+    emit commitData(p_box);
+}
